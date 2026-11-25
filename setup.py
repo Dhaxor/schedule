@@ -3,7 +3,7 @@ from setuptools import setup
 
 
 SCHEDULE_VERSION = "1.3.0"
-SCHEDULE_DOWNLOAD_URL = "https://github.com/Dhaxor/schedule/tarball/" + SCHEDULE_VERSION
+SCHEDULE_DOWNLOAD_URL = "https://github.com/Dhaxor/schedule/tarball/v" + SCHEDULE_VERSION
 
 
 def read_file(filename):
