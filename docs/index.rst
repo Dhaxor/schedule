@@ -2,14 +2,8 @@ schedule
 ========
 
 
-.. image:: https://github.com/dbader/schedule/workflows/Tests/badge.svg
-        :target: https://github.com/dbader/schedule/actions?query=workflow%3ATests+branch%3Amaster
-
-.. image:: https://coveralls.io/repos/dbader/schedule/badge.svg?branch=master
-        :target: https://coveralls.io/r/dbader/schedule
-
-.. image:: https://img.shields.io/pypi/v/schedule.svg
-        :target: https://pypi.python.org/pypi/schedule
+.. image:: https://github.com/Dhaxor/schedule/actions/workflows/ci.yml/badge.svg
+        :target: https://github.com/Dhaxor/schedule/actions/workflows/ci.yml
 
 Python job scheduling for humans. Run Python functions (or any other callable) periodically using a friendly syntax.
 
@@ -17,7 +11,7 @@ Python job scheduling for humans. Run Python functions (or any other callable) p
 - In-process scheduler for periodic jobs. No extra processes needed!
 - Very lightweight and no external dependencies.
 - Excellent test coverage.
-- Tested on Python 3.7, 3.8, 3.9, 3.10, 3.11 and 3.12
+- Tested on Python 3.9, 3.10, 3.11, 3.12, 3.13 and 3.14 on Linux, Windows and macOS
 
 
 :doc:`Example <examples>`
@@ -93,11 +87,13 @@ Read More
 Issues
 ------
 
-If you encounter any problems, please `file an issue <http://github.com/dbader/schedule/issues>`_ along with a detailed description.
+If you encounter any problems, please `file an issue <https://github.com/Dhaxor/schedule/issues>`_ along with a detailed description.
 Please also use the search feature in the issue tracker beforehand to avoid creating duplicates. Thank you 😃
 
 About Schedule
 --------------
+
+This is the community-maintained continuation of `dbader/schedule <https://github.com/dbader/schedule>`_.
 
 Created by `Daniel Bader <https://dbader.org/>`__ - `@dbader_org <https://twitter.com/dbader_org>`_
 

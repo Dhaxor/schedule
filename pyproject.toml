@@ -13,7 +13,7 @@ requires-python = ">= 3.7"
 dependencies = []
 
 maintainers = [
-  {name = "Sijmen Huizenga"}
+  {name = "Gain John"}
 ]
 
 [project.optional-dependencies]
@@ -21,6 +21,6 @@ timezone = ["pytz"]
 
 [project.urls]
 Documentation = "https://schedule.readthedocs.io"
-Repository = "https://github.com/dbader/schedule.git"
-Issues = "https://github.com/dbader/schedule/issues"
-Changelog = "https://github.com/dbader/schedule/blob/master/HISTORY.rst"
+Repository = "https://github.com/Dhaxor/schedule.git"
+Issues = "https://github.com/Dhaxor/schedule/issues"
+Changelog = "https://github.com/Dhaxor/schedule/blob/master/HISTORY.rst"

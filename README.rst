@@ -2,14 +2,8 @@
 ===============================================
 
 
-.. image:: https://github.com/dbader/schedule/workflows/Tests/badge.svg
-        :target: https://github.com/dbader/schedule/actions?query=workflow%3ATests+branch%3Amaster
-
-.. image:: https://coveralls.io/repos/dbader/schedule/badge.svg?branch=master
-        :target: https://coveralls.io/r/dbader/schedule
-
-.. image:: https://img.shields.io/pypi/v/schedule.svg
-        :target: https://pypi.python.org/pypi/schedule
+.. image:: https://github.com/Dhaxor/schedule/actions/workflows/ci.yml/badge.svg
+        :target: https://github.com/Dhaxor/schedule/actions/workflows/ci.yml
 
 Python job scheduling for humans. Run Python functions (or any other callable) periodically using a friendly syntax.
 
@@ -17,7 +11,18 @@ Python job scheduling for humans. Run Python functions (or any other callable) p
 - In-process scheduler for periodic jobs. No extra processes needed!
 - Very lightweight and no external dependencies.
 - Excellent test coverage.
-- Tested on Python and 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
+- Tested on Python 3.9, 3.10, 3.11, 3.12, 3.13 and 3.14 on Linux, Windows and macOS
+
+Project status
+--------------
+
+This is the community-maintained continuation of
+`dbader/schedule <https://github.com/dbader/schedule>`_, the Python job
+scheduling library created by Daniel Bader. The upstream repository has
+seen no maintenance activity since May 2024 (v1.2.2), so this fork
+continues the project: bug fixes, support for new Python versions and an
+active issue tracker. The 1.x API is unchanged and fully compatible with
+schedule 1.2.x — existing code keeps working as-is.
 
 Usage
 -----
@@ -25,6 +30,12 @@ Usage
 .. code-block:: bash
 
     $ pip install schedule
+
+To install this maintained fork instead (not on PyPI):
+
+.. code-block:: bash
+
+    $ pip install git+https://github.com/Dhaxor/schedule.git@v1.3.0
 
 .. code-block:: python
 
@@ -62,10 +73,12 @@ Schedule's documentation lives at `schedule.readthedocs.io <https://schedule.rea
 Meta
 ----
 
-Daniel Bader - `@dbader_org <https://twitter.com/dbader_org>`_ - mail@dbader.org
+Community-maintained fork of `dbader/schedule <https://github.com/dbader/schedule>`__.
+
+Original author: Daniel Bader - `@dbader_org <https://twitter.com/dbader_org>`_ - mail@dbader.org
 
 Inspired by `Adam Wiggins' <https://github.com/adamwiggins>`_ article `"Rethinking Cron" <https://adam.herokuapp.com/past/2010/4/13/rethinking_cron/>`_ and the `clockwork <https://github.com/Rykian/clockwork>`_ Ruby module.
 
-Distributed under the MIT license. See `LICENSE.txt <https://github.com/dbader/schedule/blob/master/LICENSE.txt>`_ for more information.
+Distributed under the MIT license. See `LICENSE.txt <https://github.com/Dhaxor/schedule/blob/master/LICENSE.txt>`_ for more information.
 
-https://github.com/dbader/schedule
+https://github.com/Dhaxor/schedule

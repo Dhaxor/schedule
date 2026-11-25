@@ -2,8 +2,8 @@ import codecs
 from setuptools import setup
 
 
-SCHEDULE_VERSION = "1.2.2"
-SCHEDULE_DOWNLOAD_URL = "https://github.com/dbader/schedule/tarball/" + SCHEDULE_VERSION
+SCHEDULE_VERSION = "1.3.0"
+SCHEDULE_DOWNLOAD_URL = "https://github.com/Dhaxor/schedule/tarball/" + SCHEDULE_VERSION
 
 
 def read_file(filename):
@@ -49,6 +49,8 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Natural Language :: English",
     ],
     python_requires=">=3.7",

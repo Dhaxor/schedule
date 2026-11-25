@@ -2,7 +2,7 @@
 
 import datetime
 import functools
-from unittest import mock, TestCase
+from unittest import mock, TestCase, skipIf
 import os
 import time
 
@@ -25,9 +25,22 @@ TZ_AUCKLAND = "NZST-12NZDT,M9.5.0,M4.1.0/3"
 TZ_CHATHAM = "<+1245>-12:45<+1345>,M9.5.0/2:45,M4.1.0/3:45"
 TZ_UTC = "UTC0"
 
+def _noop_tzset():
+    pass
+
+
+# time.tzset() is only available on Unix-like platforms. Timezone-dependent
+# behavior in the tests comes from mocked datetimes, so on Windows a no-op
+# keeps the test suite importable and runnable there as well.
+tzset = getattr(time, "tzset", _noop_tzset)
+
 # Set timezone to Europe/Berlin (CEST) to ensure global reproducibility
 os.environ["TZ"] = TZ_BERLIN
-time.tzset()
+tzset()
+
+# The test_tz_* tests switch the process timezone through the TZ environment
+# variable, which only has an effect on platforms that provide time.tzset().
+requires_tzset = skipIf(not hasattr(time, "tzset"), "requires time.tzset()")
 
 
 def make_mock_job(name=None):
@@ -80,7 +93,7 @@ class mock_datetime:
         self.original_zone = os.environ.get("TZ")
         if self.zone:
             os.environ["TZ"] = self.zone
-            time.tzset()
+            tzset()
 
         return MockDate(
             self.year, self.month, self.day, self.hour, self.minute, self.second
@@ -90,7 +103,7 @@ class mock_datetime:
         datetime.datetime = self.original_datetime
         if self.original_zone:
             os.environ["TZ"] = self.original_zone
-            time.tzset()
+            tzset()
 
 
 class SchedulerTests(TestCase):
@@ -595,6 +608,7 @@ class SchedulerTests(TestCase):
             assert job.next_run.minute == 13
             assert job.next_run.second == 15
 
+    @requires_tzset
     def test_tz(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2022, 2, 1, 23, 15):
@@ -607,6 +621,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 2
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_midnight(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 4, 14, 4, 50):
@@ -619,6 +634,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 7
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_half_hour_offset(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2022, 4, 8, 10, 0):
@@ -630,6 +646,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 16
             assert next.minute == 30
 
+    @requires_tzset
     def test_tz_daily_dst(self):
         mock_job = self.make_tz_mock_job()
         import pytz
@@ -644,6 +661,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 15
             assert next.minute == 30
 
+    @requires_tzset
     def test_tz_daily_dst_skip_hour(self):
         mock_job = self.make_tz_mock_job()
         # Test the DST-case that is described in the documentation
@@ -663,6 +681,7 @@ class SchedulerTests(TestCase):
             assert job.next_run.hour == 2
             assert job.next_run.minute == 30
 
+    @requires_tzset
     def test_tz_daily_dst_overlap_hour(self):
         mock_job = self.make_tz_mock_job()
         # Test the DST-case that is described in the documentation
@@ -682,6 +701,7 @@ class SchedulerTests(TestCase):
             assert job.next_run.hour == 2
             assert job.next_run.minute == 30
 
+    @requires_tzset
     def test_tz_daily_exact_future_scheduling(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2022, 3, 20, 10, 0):
@@ -697,6 +717,7 @@ class SchedulerTests(TestCase):
             )
             assert schedule.idle_seconds() == expected_delta.total_seconds()
 
+    @requires_tzset
     def test_tz_daily_utc(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 9, 18, 10, 59, 0, TZ_AUCKLAND):
@@ -718,6 +739,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 12
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_592(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 7, 15, 13, 0, 0, TZ_UTC):
@@ -731,6 +753,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 13
             assert next.minute == 45
 
+    @requires_tzset
     def test_tz_daily_exact_seconds_precision(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 10, 19, 15, 0, 0, TZ_UTC):
@@ -746,6 +769,7 @@ class SchedulerTests(TestCase):
             assert next.minute == 00
             assert next.second == 20
 
+    @requires_tzset
     def test_tz_weekly_sunday_conversion(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 10, 22, 23, 0, 0, TZ_UTC):
@@ -759,6 +783,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 22
             assert next.minute == 00
 
+    @requires_tzset
     def test_tz_daily_new_year_offset(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 12, 31, 23, 0, 0):
@@ -771,6 +796,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 2
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_end_year_cross_continent(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 12, 31, 23, 50):
@@ -784,6 +810,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 1
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_end_month_offset(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 2, 28, 23, 50):
@@ -797,6 +824,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 0
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_leap_year(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2024, 2, 28, 23, 50):
@@ -811,6 +839,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 1
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_605(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 9, 18, 10, 00, 0, TZ_AUCKLAND):
@@ -827,6 +856,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 11
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_dst_starting_point(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 3, 26, 1, 30):
@@ -842,6 +872,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 3
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_dst_ending_point(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 10, 29, 2, 30, fold=1):
@@ -854,6 +885,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 4
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_608_pre_dst(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 9, 18, 10, 00, 0, TZ_AUCKLAND):
@@ -868,6 +900,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 11
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_608_post_dst(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2024, 4, 8, 10, 00, 0, TZ_AUCKLAND):
@@ -882,6 +915,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 11
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_608_mid_dst(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2023, 9, 25, 10, 00, 0, TZ_AUCKLAND):
@@ -898,6 +932,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 12
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_daily_issue_608_before_dst_end(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2024, 4, 1, 10, 00, 0, TZ_AUCKLAND):
@@ -914,6 +949,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 12
             assert next.minute == 0
 
+    @requires_tzset
     def test_tz_hourly_intermediate_conversion(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2024, 5, 4, 14, 37, 22, TZ_CHATHAM):
@@ -933,6 +969,7 @@ class SchedulerTests(TestCase):
             assert next.minute == 29
             assert next.second == 45
 
+    @requires_tzset
     def test_tz_minutes_year_round(self):
         mock_job = self.make_tz_mock_job()
         # Test a full year of scheduling across timezones, where one timezone
@@ -1042,6 +1079,7 @@ class SchedulerTests(TestCase):
             assert job.next_run.minute == 35
             assert job.next_run.second == 13
 
+    @requires_tzset
     def test_tz_weekly_large_interval_forward(self):
         mock_job = self.make_tz_mock_job()
         # Testing scheduling large intervals that skip over clock move forward
@@ -1060,6 +1098,7 @@ class SchedulerTests(TestCase):
             assert next.minute == 0
             assert next.second == 0
 
+    @requires_tzset
     def test_tz_weekly_large_interval_backward(self):
         mock_job = self.make_tz_mock_job()
         import pytz
@@ -1080,6 +1119,7 @@ class SchedulerTests(TestCase):
             assert next.minute == 0
             assert next.second == 0
 
+    @requires_tzset
     def test_tz_daily_skip_dst_change(self):
         mock_job = self.make_tz_mock_job()
         with mock_datetime(2024, 11, 3, 10, 0):
@@ -1100,6 +1140,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 0
             assert next.minute == 00
 
+    @requires_tzset
     def test_tz_daily_different_simultaneous_dst_change(self):
         mock_job = self.make_tz_mock_job()
 
@@ -1122,6 +1163,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 11
             assert next.minute == 00
 
+    @requires_tzset
     def test_tz_daily_opposite_dst_change(self):
         mock_job = self.make_tz_mock_job()
 
@@ -1143,6 +1185,7 @@ class SchedulerTests(TestCase):
             assert next.hour == 9
             assert next.minute == 00
 
+    @requires_tzset
     def test_tz_invalid_timezone_exceptions(self):
         mock_job = self.make_tz_mock_job()
         import pytz

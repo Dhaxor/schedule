@@ -3,6 +3,30 @@
 History
 -------
 
+1.3.0 (2026-11-25)
+++++++++++++++++++
+
+This is the first release of the community-maintained continuation of
+``schedule``. The upstream repository (dbader/schedule) has seen no
+maintenance activity since May 2024 (v1.2.2), so this fork continues
+the project. All credit for creating ``schedule`` and maintaining it up
+to 1.2.2 goes to Daniel Bader and the upstream contributors.
+
+- The test suite now runs on Windows: guard the POSIX-only
+  ``time.tzset()`` calls and skip the timezone-dependent tests on
+  platforms that lack ``time.tzset()``.
+- CI now runs the tests on Linux, Windows and macOS for Python 3.9
+  through 3.14 (previously: Ubuntu only, 3.7 through 3.12) and no
+  longer depends on the Coveralls service.
+- Type checking (mypy) now runs in a dedicated CI job.
+- Declare support for Python 3.13 and 3.14 in the packaging metadata.
+- Update project metadata, badges and documentation links to point to
+  this continuation.
+
+There are no functional changes to the scheduler. The API is unchanged
+and fully compatible with 1.2.2.
+
+
 1.2.2 (2024-05-25)
 ++++++++++++++++++
 
