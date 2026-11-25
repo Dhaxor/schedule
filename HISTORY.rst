@@ -15,7 +15,7 @@ to 1.2.2 goes to Daniel Bader and the upstream contributors.
 - The test suite now runs on Windows: guard the POSIX-only
   ``time.tzset()`` calls and skip the timezone-dependent tests on
   platforms that lack ``time.tzset()``.
-- CI now runs the tests on Linux, Windows and macOS for Python 3.9
+- CI now runs the tests on Linux, Windows and macOS for Python 3.10
   through 3.14 (previously: Ubuntu only, 3.7 through 3.12) and no
   longer depends on the Coveralls service.
 - Type checking (mypy) now runs in a dedicated CI job.

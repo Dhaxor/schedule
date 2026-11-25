@@ -15,7 +15,7 @@ Features:
     - A simple to use API for scheduling jobs.
     - Very lightweight and no external dependencies.
     - Excellent test coverage.
-    - Tested on Python 3.9 through 3.14 on Linux, Windows and macOS
+    - Tested on Python 3.10 through 3.14 on Linux, Windows and macOS
 
 Usage:
     >>> import schedule
